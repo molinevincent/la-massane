@@ -98,12 +98,12 @@ export default async function handler(req, res) {
   }
 
   // Envoi
-  console.log('[reserver] tentative envoi Resend vers', process.env.OWNER_EMAIL);
+  console.log('[reserver] tentative envoi Resend vers', process.env.OWNER_EMAIL_1, process.env.OWNER_EMAIL_2);
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const result = await resend.emails.send({
       from:    process.env.FROM_EMAIL,
-      to:      process.env.OWNER_EMAIL.split(',').map(e => e.trim()),
+      to:      [process.env.OWNER_EMAIL_1, process.env.OWNER_EMAIL_2].filter(Boolean),
       replyTo: email,
       subject: `Demande de réservation — ${name} (${checkin} → ${checkout})`,
       text:
