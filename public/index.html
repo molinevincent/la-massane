@@ -483,7 +483,7 @@
           <div id="summaryFull" class="summary" style="display:none;">
             <div class="summary-row"><span id="rangeLabel"></span><span id="nightsLabel"></span></div>
             <div class="summary-row"><span>Sous-total nuits</span><span id="subLabel"></span></div>
-            <div class="summary-row"><span>Frais de ménage</span><span>80 €</span></div>
+            <div class="summary-row"><span>Frais de ménage</span><span>250 €</span></div>
             <div class="summary-total"><span>Total estimé</span><span id="totalLabel"></span></div>
           </div>
 
@@ -526,16 +526,9 @@
     /* ======================================================
        TARIFS — modifie ces valeurs
        ====================================================== */
-    var SEASON = [
-      // { from: "AAAA-MM-JJ", to: "AAAA-MM-JJ", price: XXX }
-      // Haute saison estivale
-      { from: "2026-07-01", to: "2026-08-31", price: 350 },
-      // Ponts et vacances scolaires
-      { from: "2026-10-17", to: "2026-11-02", price: 290 },
-      { from: "2026-12-19", to: "2027-01-04", price: 320 },
-    ];
-    var PRICE_DEFAULT = 290;   // tarif hors saison
-    var CLEANING      = 80;    // frais de ménage
+    var SEASON = [];
+    var PRICE_DEFAULT = 290;   // tarif unique toutes saisons
+    var CLEANING      = 250;    // frais de ménage
     var MIN_NIGHTS    = 2;
 
     /* DATES INDISPONIBLES — format AAAA-MM-JJ */
