@@ -221,6 +221,7 @@
       border-radius: 8px; min-height: 52px; cursor: pointer;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       font-size: 14px; gap: 2px; transition: border-color .12s;
+      touch-action: manipulation; -webkit-tap-highlight-color: transparent;
     }
     .cal-day small { font-size: 10px; color: var(--ink-soft); }
     .cal-day:hover:not(.blocked) { border-color: var(--green); }
@@ -272,11 +273,83 @@
     footer { border-top: 1px solid var(--line); padding: 28px 0; margin-top: 40px; }
     .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--ink-soft); }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 700px) {
-      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 160px 160px; }
-      .g-main { grid-row: span 1; }
+    /* ===== RESPONSIVE TABLETTE (≤ 900px) ===== */
+    @media (max-width: 900px) {
+      .booking-layout { grid-template-columns: 1fr; }
+      .booking-panel { position: static; }
+      .spaces-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    }
+
+    /* ===== RESPONSIVE MOBILE (≤ 600px) ===== */
+    @media (max-width: 600px) {
+      /* Header */
       nav a:not(.cta-nav) { display: none; }
+      .brand-name { font-size: 18px; }
+
+      /* Hero */
+      .hero { padding: 28px 0 20px; }
+      .hero h1 { font-size: 32px; max-width: 100%; }
+      .hero-desc { font-size: 15px; }
+      .hero-meta { gap: 8px; }
+      .hero-meta .pill { font-size: 13px; padding: 4px 10px; }
+
+      /* Galerie : une seule colonne grande + scroll horizontal */
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 140px 140px;
+      }
+      .g-main { grid-row: span 1; }
+
+      /* Sections */
+      .section { padding: 28px 0; }
+      .section-title { font-size: 22px; margin-bottom: 14px; }
+      .wrap { padding: 0 16px; }
+
+      /* Chiffres clés */
+      .caps-row { gap: 10px; }
+      .cap-pill { min-width: 90px; padding: 10px 12px; font-size: 13px; }
+      .cap-pill strong { font-size: 18px; }
+
+      /* Espaces */
+      .spaces-grid { grid-template-columns: 1fr; }
+      .space-card img { height: 180px; }
+
+      /* Règlement */
+      .rules-grid { grid-template-columns: 1fr; }
+
+      /* Équipements */
+      .equip-grid { grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+      .equip-item { font-size: 13px; }
+
+      /* Calendrier */
+      .cal-day { min-height: 42px; font-size: 13px; }
+      .cal-day small { font-size: 9px; }
+      .cal-nav .month-label { font-size: 17px; }
+
+      /* Panneau réservation */
+      .booking-panel { padding: 16px; border-radius: 10px; }
+      .price-line { font-size: 22px; }
+      .summary-total { font-size: 15px; }
+
+      /* Formulaire */
+      .form-row { grid-template-columns: 1fr; gap: 8px; }
+      .field input, .field textarea, .field select,
+      select[id="fAdults"], select[id="fChildren"] { font-size: 16px; } /* évite le zoom iOS */
+      .btn-submit { padding: 15px; font-size: 16px; border-radius: 10px; }
+
+      /* Footer */
+      .footer-inner { flex-direction: column; text-align: center; gap: 6px; }
+
+      /* Lightbox */
+      #lightbox img { max-height: 70vh; }
+      #lightbox .lb-controls { gap: 12px; }
+    }
+
+    /* ===== TRÈS PETIT MOBILE (≤ 380px) ===== */
+    @media (max-width: 380px) {
+      .gallery-grid { grid-template-columns: 1fr; grid-template-rows: repeat(3, 160px); }
+      .equip-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
     }
   </style>
 </head>
@@ -543,6 +616,11 @@
     </section>
 
   </main>
+
+  <!-- Bouton réserver flottant sur mobile -->
+  <div id="mobileBar" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:90; padding:12px 16px; background:rgba(245,242,236,0.97); border-top:1px solid var(--line); backdrop-filter:blur(8px);">
+    <a href="#reserver" class="btn-submit" style="display:block; text-align:center; text-decoration:none; padding:14px; border-radius:10px; font-size:16px; font-weight:500;">Réserver — à partir de 290 €/nuit</a>
+  </div>
 
   <footer>
     <div class="wrap footer-inner">
@@ -836,6 +914,21 @@
 
     /* Footer & init */
     document.getElementById("footerYear").textContent = new Date().getFullYear();
+
+    // Barre sticky mobile : apparaît après le hero, disparaît quand on est sur #reserver
+    var mobileBar = document.getElementById("mobileBar");
+    function checkMobileBar(){
+      if(window.innerWidth > 600){ mobileBar.style.display="none"; return; }
+      var hero = document.querySelector(".hero");
+      var reserver = document.getElementById("reserver");
+      if(!hero || !reserver) return;
+      var heroBottom = hero.getBoundingClientRect().bottom;
+      var reserverTop = reserver.getBoundingClientRect().top;
+      mobileBar.style.display = (heroBottom < 0 && reserverTop > window.innerHeight) ? "block" : "none";
+    }
+    window.addEventListener("scroll", checkMobileBar, {passive:true});
+    window.addEventListener("resize", checkMobileBar, {passive:true});
+    checkMobileBar();
     renderCal();
     updateSummary();
 
