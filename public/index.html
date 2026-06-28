@@ -484,6 +484,7 @@
             <div class="summary-row"><span id="rangeLabel"></span><span id="nightsLabel"></span></div>
             <div class="summary-row"><span>Sous-total nuits</span><span id="subLabel"></span></div>
             <div class="summary-row"><span>Frais de ménage</span><span>250 €</span></div>
+            <div class="summary-row" id="taxeRow" style="display:none;"><span>Taxe de séjour</span><span id="taxeLabel"></span></div>
             <div class="summary-total"><span>Total estimé</span><span id="totalLabel"></span></div>
           </div>
 
@@ -502,7 +503,35 @@
               <div class="field"><input type="email" name="email" id="fEmail" placeholder="Votre email" required /></div>
             </div>
             <div class="field"><input type="tel" name="phone" id="fPhone" placeholder="Téléphone (facultatif)" /></div>
-            <div class="field"><textarea name="message" id="fMsg" rows="3" placeholder="Nombre de voyageurs, dates souhaitées, questions…"></textarea></div>
+            <div class="form-row">
+              <div class="field">
+                <select name="adults" id="fAdults" required>
+                  <option value="" disabled selected>Adultes</option>
+                  <option value="1">1 adulte</option>
+                  <option value="2">2 adultes</option>
+                  <option value="3">3 adultes</option>
+                  <option value="4">4 adultes</option>
+                  <option value="5">5 adultes</option>
+                  <option value="6">6 adultes</option>
+                  <option value="7">7 adultes</option>
+                  <option value="8">8 adultes</option>
+                </select>
+              </div>
+              <div class="field">
+                <select name="children" id="fChildren">
+                  <option value="0" selected>0 enfant</option>
+                  <option value="1">1 enfant</option>
+                  <option value="2">2 enfants</option>
+                  <option value="3">3 enfants</option>
+                  <option value="4">4 enfants</option>
+                  <option value="5">5 enfants</option>
+                  <option value="6">6 enfants</option>
+                  <option value="7">7 enfants</option>
+                  <option value="8">8 enfants</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><textarea name="message" id="fMsg" rows="3" placeholder="Questions, informations complémentaires…"></textarea></div>
 
             <button type="submit" class="btn-submit" id="submitBtn">Envoyer ma demande</button>
             <p class="form-note">Sans engagement · Réponse sous 24 h · Paiement après confirmation</p>
@@ -630,12 +659,34 @@
       var nights=0, sub=0, c=new Date(start);
       while(c < end){ sub += priceOf(c); nights++; c.setDate(c.getDate()+1); }
 
+      // Taxe de séjour Calvados 2026 — Terre d'Auge / Englesqueville-en-Auge
+      // Formule : coût HT/pers/nuit = prix séjour ÷ nuits ÷ (adultes+enfants)
+      //           taxe = 5% × coût × 1.10 TAD × adultes × nuits
+      var adultsEl   = document.getElementById("fAdults");
+      var childrenEl = document.getElementById("fChildren");
+      var adults   = parseInt(adultsEl   ? adultsEl.value   : 0) || 0;
+      var children = parseInt(childrenEl ? childrenEl.value : 0) || 0;
+      var totalOccupants = adults + children;
+      var taxe = 0;
+      if(adults > 0 && nights > 0 && totalOccupants > 0){
+        var coutParPersNuit = sub / nights / totalOccupants;
+        var taxeParAdulteNuit = coutParPersNuit * 0.05 * 1.10;
+        taxe = Math.round(taxeParAdulteNuit * adults * nights * 100) / 100;
+      }
+
       emptyEl.style.display = "none";
       fullEl.style.display  = "block";
       document.getElementById("rangeLabel").textContent  = fmtDate(start)+" → "+fmtDate(end);
       document.getElementById("nightsLabel").textContent = nights+" nuit"+(nights>1?"s":"");
       document.getElementById("subLabel").textContent    = sub+" €";
-      document.getElementById("totalLabel").textContent  = (sub+CLEANING)+" €";
+
+      if(taxe > 0){
+        document.getElementById("taxeRow").style.display = "";
+        document.getElementById("taxeLabel").textContent = taxe.toFixed(2).replace(".", ",")+" €";
+      } else {
+        document.getElementById("taxeRow").style.display = "none";
+      }
+      document.getElementById("totalLabel").textContent  = (sub + CLEANING + taxe).toFixed(2).replace(".", ",")+" €";
       document.getElementById("fCheckin").value  = iso(start);
       document.getElementById("fCheckout").value = iso(end);
     }
@@ -650,6 +701,12 @@
     /* ====== Formulaire ====== */
     var loadTime = Date.now();
     var form = document.getElementById("bookForm");
+
+    // Recalcule la taxe de séjour quand le nombre d'adultes change
+    var adultsSelect = document.getElementById("fAdults");
+    if(adultsSelect){
+      adultsSelect.addEventListener("change", function(){ updateSummary(); });
+    }
     var msg  = document.getElementById("formMsg");
     var btn  = document.getElementById("submitBtn");
 
@@ -672,18 +729,23 @@
       }
 
       var payload = {
-        name:    form.name.value.trim(),
-        email:   form.email.value.trim(),
-        phone:   form.phone.value.trim(),
-        message: form.message.value.trim(),
+        name:     form.name.value.trim(),
+        email:    form.email.value.trim(),
+        phone:    form.phone.value.trim(),
+        adults:   form.adults.value,
+        children: form.children.value,
+        message:  form.message.value.trim(),
         checkin:  form.checkin.value,
         checkout: form.checkout.value,
-        company: form.company.value,
-        elapsed: Date.now() - loadTime
+        company:  form.company.value,
+        elapsed:  Date.now() - loadTime
       };
 
       if(!payload.name || !payload.email){
         showMsg("Merci d'indiquer votre nom et votre email.", false); return;
+      }
+      if(!payload.adults){
+        showMsg("Merci d'indiquer le nombre d'adultes.", false); return;
       }
 
       btn.disabled    = true;
