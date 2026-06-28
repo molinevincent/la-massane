@@ -479,6 +479,35 @@
           <div class="price-line">À partir de 290 €<span style="font-size:16px; font-family:Inter; font-weight:400"> / nuit</span></div>
           <div class="price-note">Tarif selon la saison · Ménage en supplément</div>
 
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0;">
+            <div>
+              <select id="fAdults" name="adults" required style="width:100%">
+                <option value="0" selected>Adultes</option>
+                <option value="1">1 adulte</option>
+                <option value="2">2 adultes</option>
+                <option value="3">3 adultes</option>
+                <option value="4">4 adultes</option>
+                <option value="5">5 adultes</option>
+                <option value="6">6 adultes</option>
+                <option value="7">7 adultes</option>
+                <option value="8">8 adultes</option>
+              </select>
+            </div>
+            <div>
+              <select id="fChildren" name="children" style="width:100%">
+                <option value="0" selected>0 enfant</option>
+                <option value="1">1 enfant</option>
+                <option value="2">2 enfants</option>
+                <option value="3">3 enfants</option>
+                <option value="4">4 enfants</option>
+                <option value="5">5 enfants</option>
+                <option value="6">6 enfants</option>
+                <option value="7">7 enfants</option>
+                <option value="8">8 enfants</option>
+              </select>
+            </div>
+          </div>
+
           <div id="summaryEmpty" class="empty-state">Sélectionnez vos dates dans le calendrier pour voir le total.</div>
           <div id="summaryFull" class="summary" style="display:none;">
             <div class="summary-row"><span id="rangeLabel"></span><span id="nightsLabel"></span></div>
@@ -503,34 +532,6 @@
               <div class="field"><input type="email" name="email" id="fEmail" placeholder="Votre email" required /></div>
             </div>
             <div class="field"><input type="tel" name="phone" id="fPhone" placeholder="Téléphone (facultatif)" /></div>
-            <div class="form-row">
-              <div class="field">
-                <select name="adults" id="fAdults" required>
-                  <option value="" disabled selected>Adultes</option>
-                  <option value="1">1 adulte</option>
-                  <option value="2">2 adultes</option>
-                  <option value="3">3 adultes</option>
-                  <option value="4">4 adultes</option>
-                  <option value="5">5 adultes</option>
-                  <option value="6">6 adultes</option>
-                  <option value="7">7 adultes</option>
-                  <option value="8">8 adultes</option>
-                </select>
-              </div>
-              <div class="field">
-                <select name="children" id="fChildren">
-                  <option value="0" selected>0 enfant</option>
-                  <option value="1">1 enfant</option>
-                  <option value="2">2 enfants</option>
-                  <option value="3">3 enfants</option>
-                  <option value="4">4 enfants</option>
-                  <option value="5">5 enfants</option>
-                  <option value="6">6 enfants</option>
-                  <option value="7">7 enfants</option>
-                  <option value="8">8 enfants</option>
-                </select>
-              </div>
-            </div>
             <div class="field"><textarea name="message" id="fMsg" rows="3" placeholder="Questions, informations complémentaires…"></textarea></div>
 
             <button type="submit" class="btn-submit" id="submitBtn">Envoyer ma demande</button>
@@ -666,8 +667,8 @@
       // taxeTotale = taxeParAdulteParNuit * nbAdultes * nbNuits
       var adultsEl   = document.getElementById("fAdults");
       var childrenEl = document.getElementById("fChildren");
-      var adults   = adultsEl   ? parseInt(adultsEl.options[adultsEl.selectedIndex].value)   || 0 : 0;
-      var children = childrenEl ? parseInt(childrenEl.options[childrenEl.selectedIndex].value) || 0 : 0;
+      var adults   = adultsEl   ? (parseInt(adultsEl.value,   10) || 0) : 0;
+      var children = childrenEl ? (parseInt(childrenEl.value, 10) || 0) : 0;
       var PLAFOND_TAXE = 4.80;
       var totalOccupants = adults + children;
       var taxe = 0;
