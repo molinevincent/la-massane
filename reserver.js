@@ -98,7 +98,7 @@ export default async function handler(req, res) {
   }
 
   // Envoi
-  console.log('[reserver] tentative envoi Resend vers', process.env.OWNER_EMAIL_1, process.env.OWNER_EMAIL_2);
+  console.log('[reserver] ENV CHECK — EMAIL_1:', process.env.OWNER_EMAIL_1 || 'VIDE', '| EMAIL_2:', process.env.OWNER_EMAIL_2 || 'VIDE', '| RESEND_KEY:', process.env.RESEND_API_KEY ? 'OK' : 'MANQUANTE', '| FROM:', process.env.FROM_EMAIL || 'VIDE');
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const result = await resend.emails.send({
