@@ -1,0 +1,10 @@
+{
+  "name": "villa-les-oliviers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site de location de la Villa Les Oliviers",
+  "type": "module",
+  "dependencies": {
+    "resend": "^4.0.0"
+  }
+}
