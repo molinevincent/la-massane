@@ -666,8 +666,8 @@
       // taxeTotale = taxeParAdulteParNuit * nbAdultes * nbNuits
       var adultsEl   = document.getElementById("fAdults");
       var childrenEl = document.getElementById("fChildren");
-      var adults   = parseInt(adultsEl   ? adultsEl.value   : 0) || 0;
-      var children = parseInt(childrenEl ? childrenEl.value : 0) || 0;
+      var adults   = adultsEl   ? parseInt(adultsEl.options[adultsEl.selectedIndex].value)   || 0 : 0;
+      var children = childrenEl ? parseInt(childrenEl.options[childrenEl.selectedIndex].value) || 0 : 0;
       var PLAFOND_TAXE = 4.80;
       var totalOccupants = adults + children;
       var taxe = 0;
@@ -707,11 +707,11 @@
     var loadTime = Date.now();
     var form = document.getElementById("bookForm");
 
-    // Recalcule la taxe de séjour quand le nombre d'adultes change
-    var adultsSelect = document.getElementById("fAdults");
-    if(adultsSelect){
-      adultsSelect.addEventListener("change", function(){ updateSummary(); });
-    }
+    // Recalcule la taxe quand adultes ou enfants changent
+    ["fAdults","fChildren"].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.addEventListener("change", function(){ updateSummary(); });
+    });
     var msg  = document.getElementById("formMsg");
     var btn  = document.getElementById("submitBtn");
 
