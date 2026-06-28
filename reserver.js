@@ -103,7 +103,7 @@ export default async function handler(req, res) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const result = await resend.emails.send({
       from:    process.env.FROM_EMAIL,
-      to:      process.env.OWNER_EMAIL,
+      to:      process.env.OWNER_EMAIL.split(',').map(e => e.trim()),
       replyTo: email,
       subject: `Demande de réservation — ${name} (${checkin} → ${checkout})`,
       text:
