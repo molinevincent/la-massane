@@ -385,7 +385,7 @@
           <img src="/photos/10-salle-manger.jpg" alt="Salle à manger colombages" loading="lazy" />
           <div class="space-card-body">
             <h3>Partie colombage · Salon & 2 chambres</h3>
-            <p>Dans son jus d'origine : petit salon avec poêle et coin multimédia, une chambre RDC (2 lits simples), une chambre à l'étage (1 lit double), salle de bain et WC.</p>
+            <p>Salon avec poêle et coin multimédia, une chambre RDC (2 lits simples), une chambre à l'étage (1 lit double), salle de bain et WC.</p>
           </div>
         </div>
         <div class="space-card">
@@ -476,7 +476,7 @@
 
         <!-- Panneau de réservation -->
         <div class="booking-panel">
-          <div class="price-line">À partir de 150 €<span style="font-size:16px; font-family:Inter; font-weight:400"> / nuit</span></div>
+          <div class="price-line">À partir de 290 €<span style="font-size:16px; font-family:Inter; font-weight:400"> / nuit</span></div>
           <div class="price-note">Tarif selon la saison · Ménage en supplément</div>
 
           <div id="summaryEmpty" class="empty-state">Sélectionnez vos dates dans le calendrier pour voir le total.</div>
@@ -529,20 +529,23 @@
     var SEASON = [
       // { from: "AAAA-MM-JJ", to: "AAAA-MM-JJ", price: XXX }
       // Haute saison estivale
-      { from: "2026-07-01", to: "2026-08-31", price: 250 },
+      { from: "2026-07-01", to: "2026-08-31", price: 350 },
       // Ponts et vacances scolaires
-      { from: "2026-10-17", to: "2026-11-02", price: 180 },
-      { from: "2026-12-19", to: "2027-01-04", price: 200 },
+      { from: "2026-10-17", to: "2026-11-02", price: 290 },
+      { from: "2026-12-19", to: "2027-01-04", price: 320 },
     ];
-    var PRICE_DEFAULT = 150;   // tarif hors saison
+    var PRICE_DEFAULT = 290;   // tarif hors saison
     var CLEANING      = 80;    // frais de ménage
     var MIN_NIGHTS    = 2;
 
     /* DATES INDISPONIBLES — format AAAA-MM-JJ */
     var BLOCKED = [
-      "2026-07-10","2026-07-11","2026-07-12","2026-07-13","2026-07-14",
-      "2026-08-01","2026-08-02","2026-08-03","2026-08-04","2026-08-05",
-      "2026-08-06","2026-08-07","2026-08-08","2026-08-09","2026-08-10"
+      "2026-06-29","2026-06-30","2026-07-01","2026-07-02","2026-07-03","2026-07-04","2026-07-05",
+      "2026-07-06","2026-07-07","2026-07-08","2026-07-09","2026-07-10","2026-07-11","2026-07-12",
+      "2026-07-13","2026-07-14","2026-07-15","2026-07-16","2026-07-17","2026-07-18","2026-07-19",
+      "2026-07-20","2026-07-21","2026-07-22","2026-07-23","2026-07-24","2026-07-25","2026-07-26",
+      "2026-07-27","2026-07-28","2026-07-29","2026-07-30","2026-08-09","2026-08-10","2026-08-11",
+      "2026-08-12","2026-08-13"
     ];
 
     /* ====== Calendrier ====== */
