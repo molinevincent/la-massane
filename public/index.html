@@ -659,19 +659,24 @@
       var nights=0, sub=0, c=new Date(start);
       while(c < end){ sub += priceOf(c); nights++; c.setDate(c.getDate()+1); }
 
-      // Taxe de séjour Calvados 2026 — Terre d'Auge / Englesqueville-en-Auge
-      // Formule : coût HT/pers/nuit = prix séjour ÷ nuits ÷ (adultes+enfants)
-      //           taxe = 5% × coût × 1.10 TAD × adultes × nuits
+      // Taxe de séjour Calvados 2026 — Terre d'Auge
+      // prixParPersonneParNuit = prixHT / nbNuits / nbOccupants
+      // taxeBase = prixParPersonneParNuit * 5% (plafonné à 4,80€)
+      // taxeParAdulteParNuit = taxeBase * 1.10 (TAD Calvados)
+      // taxeTotale = taxeParAdulteParNuit * nbAdultes * nbNuits
       var adultsEl   = document.getElementById("fAdults");
       var childrenEl = document.getElementById("fChildren");
       var adults   = parseInt(adultsEl   ? adultsEl.value   : 0) || 0;
       var children = parseInt(childrenEl ? childrenEl.value : 0) || 0;
+      var PLAFOND_TAXE = 4.80;
       var totalOccupants = adults + children;
       var taxe = 0;
       if(adults > 0 && nights > 0 && totalOccupants > 0){
-        var coutParPersNuit = sub / nights / totalOccupants;
-        var taxeParAdulteNuit = coutParPersNuit * 0.05 * 1.10;
-        taxe = Math.round(taxeParAdulteNuit * adults * nights * 100) / 100;
+        var prixParPersNuit = sub / nights / totalOccupants;
+        var taxeBase = prixParPersNuit * 0.05;
+        if(taxeBase > PLAFOND_TAXE) taxeBase = PLAFOND_TAXE;
+        var taxeParAdulteParNuit = taxeBase * 1.10;
+        taxe = Math.round(taxeParAdulteParNuit * adults * nights * 100) / 100;
       }
 
       emptyEl.style.display = "none";
